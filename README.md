@@ -10,5 +10,5 @@ My AI policy:
 ### Linear data generator
 
 `linear_data_generator.py` is a simple script that generates 10000 data points roughly around the `y = 3x + 10` line. The aim here is to create a dataset of points onto which a single neuron can learn to fit a straight line.  
-You may run this script with the command:  
+You may run this script with the command after navigating to the `linear_regression` folder:  
 `py linear_data_generator.py`
