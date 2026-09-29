@@ -36,6 +36,6 @@ print("Predictions:\n")
 with torch.no_grad():
     for value in [x for x in range(0, 101, 5)]: # integers between 0 and 100 with steps of 5
         prediction = model(torch.tensor([[float(value)]]))
-        print(f"{value} -> {prediction}")
+        print(f"{value} -> {prediction.item():.4f}")
 
 # Persist the model
