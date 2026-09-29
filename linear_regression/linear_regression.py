@@ -1,6 +1,7 @@
 import pandas as pd
 import torch
 import torch.nn as nn
+import os
 
 # Load the dataset
 data = pd.read_csv("linear_data.csv", names = ["x", "y"]) # x is the input feature, y is the true output target
@@ -39,3 +40,5 @@ with torch.no_grad():
         print(f"{value} -> {prediction.item():.4f}")
 
 # Persist the model
+os.makedirs("models", exist_ok = True)
+torch.save(model.state_dict(), "models/linear_regression_model.pth")
