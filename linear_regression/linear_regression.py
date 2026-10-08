@@ -15,7 +15,7 @@ y = torch.tensor(data["y"].values, dtype = torch.float32).view(-1, 1)
 model = nn.Linear(1, 1)
 
 # Training hyperparameters
-num_of_epochs = 500_000 # Training will run for this many epochs by default
+num_of_epochs = 50_000 # Training will run for this many epochs by default
 min_num_of_epochs = 50 # Training will run for this many epochs irregardless of recent loss values
 learning_rate = 0.001
 
