@@ -26,7 +26,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
 # History and early stopping condition
 weight_history = []
 bias_history = []
-early_stopping_condition = lambda : abs(weight_history[-1] - weight_history[-2]) < 0.00005 and abs(bias_history[-1] - bias_history[-2] < 0.00005)
+early_stopping_condition = lambda : abs(weight_history[-1] - weight_history[-2]) < 0.00005 and abs(bias_history[-1] - bias_history[-2]) < 0.00005
 
 # Train the model
 print("Starting training the model...")
