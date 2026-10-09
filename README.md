@@ -1,5 +1,5 @@
 # Deep Network Development - Fall 2026 - Practice
-In this repo I aim to create various small, self-contained machine learning / neural network projects, neatly organised into separate folders.  
+In this repo I aim to create various small, self-contained machine learning / neural network projects, neatly organised into separate folders. The goal here is to prepare and practice for this semester's Deep Network Development classes, assignment work and coding tests as part of my Autonomous Systems Computer Science Masters programme.  
 My AI policy:  
 - I use AI heavily for researching topics, programming language syntax, summarizing and fetching documentation and generic semantics. Example prompts: _"Show me a generic way to write a forward function in a model containing an input layer, a single hidden layer and an output layer, with the input layer and the hidden layer utilizing a ReLU activation function."_ or _"What is the purpose of an activation function?"_
 - All code explicitly appearing in the repository is 100% organic human handwritten.
