@@ -47,3 +47,5 @@ The commandline interface can be used with the below command after navigating to
 The GUI features an output label showcasing the model's prediction to the latest user input. It also displays a plot showing the true `y = 3x + 10` line and the predictions made by the model, annotated by the exact (input, output) pairs for ease of reading.
 
 The GUI is implemented with `tkinter`. The plot is made with `matplotlib` and its associated `tkinter` backend API.
+
+![Linear regression GUI showcase](docs/linear_regression_resources/linear_regression_gui.png)
