@@ -41,7 +41,7 @@ There is currently no error or exception handling implemented. Any irregular or 
 
 It is required that you create a model using `linear_regression.py` before attempting to use the GUI.  
 
-The commandline interface can be used with the below command after navigating to the `linear_regression` folder:  
+The GUI can be used with the below command after navigating to the `linear_regression` folder:  
 `py linear_regression_gui.py`
 
 The GUI features an output label showcasing the model's prediction to the latest user input. It also displays a plot showing the true `y = 3x + 10` line and the predictions made by the model, annotated by the exact (input, output) pairs for ease of reading.
