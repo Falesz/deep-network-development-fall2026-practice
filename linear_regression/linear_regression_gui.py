@@ -43,7 +43,7 @@ output_label = tk.Label(window, text = "According to the linear regression model
 output_prediction = tk.Label(window, text = f"NONE")
 
 # Plotting a figure with the true line
-figure = Figure(figsize = (5, 3), dpi = 100)
+figure = Figure(figsize = (5, 4), dpi = 100)
 axes = figure.add_subplot(1, 1, 1)
 
 x_values = np.linspace(0, 100, 200)
