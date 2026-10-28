@@ -34,3 +34,16 @@ The commandline interface can be used with the below command after navigating to
 The standard output will show the loaded model's prediction to each piece of user input. There are no other side effects of the program.
 
 There is currently no error or exception handling implemented. Any irregular or invalid use of the program may result in crashing or unintended behaviour.
+
+### Using the linear regression model via the graphic user interface (GUI)
+
+`linear_regression_gui.py` is a simple GUI program that uses the available linear regression model to predict output values to user inputs. Valid inputs are integers between `0` and `100` in the given line edit input widget.  
+
+It is required that you create a model using `linear_regression.py` before attempting to use the GUI.  
+
+The commandline interface can be used with the below command after navigating to the `linear_regression` folder:  
+`py linear_regression_gui.py`
+
+The GUI features an output label showcasing the model's prediction to the latest user input. It also displays a plot showing the true `y = 3x + 10` line and the predictions made by the model, annotated by the exact (input, output) pairs for ease of reading.
+
+The GUI is implemented with `tkinter`. The plot is made with `matplotlib` and its associated `tkinter` backend API.
