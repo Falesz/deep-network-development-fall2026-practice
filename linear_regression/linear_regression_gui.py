@@ -32,8 +32,17 @@ def handle_input():
     model_output = model(torch.tensor([user_input])).item()
     output_prediction.config(text = f"{model_output:.2f}")
     prediction_history.append((user_input, model_output))
-    axes.plot(user_input, model_output, "ro",
-                label = "Prediction" if "Prediction" not in axes.get_legend_handles_labels()[1] else "_nolegend_")
+    axes.plot(
+        user_input, model_output, "ro",
+        label = "Prediction" if "Prediction" not in axes.get_legend_handles_labels()[1] else "_nolegend_"
+    )
+    axes.annotate(
+        f"({user_input}, {model_output:.2f})",
+        (user_input, model_output),
+        textcoords = "offset points",
+        xytext = (10, 0),
+        fontsize = 8
+    )
     axes.legend()
     canvas.draw()
 
