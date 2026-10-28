@@ -1,6 +1,11 @@
 import torch
 import torch.nn as nn
+
 import tkinter as tk
+
+import numpy as np
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 # Recreate the model architecture from the actual linear regression script
 model = nn.Linear(1, 1)
@@ -28,9 +33,27 @@ input_field.bind("<Return>", lambda event : output_prediction.config(
 output_label = tk.Label(window, text = "According to the linear regression model, the output should be: ")
 output_prediction = tk.Label(window, text = f"NONE")
 
+# Plotting a figure with the true line
+figure = Figure(figsize = (5, 3), dpi = 100)
+axes = figure.add_subplot(1, 1, 1)
+
+x_values = np.linspace(0, 100, 200)
+y_values = 3 * x_values + 10
+
+axes.plot(x_values, y_values, label = "True line")
+axes.set_title("Linear regression: y = 3x + 10")
+axes.set_xlabel("Input (x)")
+axes.set_ylabel("Output (y)")
+axes.grid(True)
+axes.legend()
+
+canvas = FigureCanvasTkAgg(figure, master = window)
+canvas.draw()
+
 # Start up the window
 input_label.pack()
 input_field.pack()
 output_label.pack()
 output_prediction.pack()
+canvas.get_tk_widget().pack()
 window.mainloop()
