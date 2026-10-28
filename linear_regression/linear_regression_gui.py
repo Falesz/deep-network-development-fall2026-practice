@@ -26,12 +26,10 @@ window.title("Linear regression GUI")
 input_label = tk.Label(window, text = "Enter a number between 0 and 100: ")
 input_field = tk.Entry(window)
 
-prediction_history = []
 def handle_input():
     user_input = float(input_field.get())
     model_output = model(torch.tensor([user_input])).item()
     output_prediction.config(text = f"{model_output:.2f}")
-    prediction_history.append((user_input, model_output))
     axes.plot(
         user_input, model_output, "ro",
         label = "Prediction" if "Prediction" not in axes.get_legend_handles_labels()[1] else "_nolegend_"
