@@ -3,13 +3,6 @@ import torch
 import torch.nn as nn
 import os
 
-# Load the dataset
-data = pd.read_csv("clamped_linear_data.csv", names = ["x", "y"]) # x is the input feature, y is the true output target
-
-# Create pytorch tensors
-x = torch.tensor(data["x"].values, dtype = torch.float32).view(-1, 1)
-y = torch.tensor(data["y"].values, dtype = torch.float32).view(-1, 1)
-
 # Create a model
 class ClampedLinearRegressionModel(nn.Module):
     def __init__(self):
@@ -41,65 +34,76 @@ class ClampedLinearRegressionModel(nn.Module):
         z = self.input_layer(x)
         y = self.output_layer(nn.functional.softplus(z))
         return y
-    
-model = ClampedLinearRegressionModel()
-    
-# Training hyperparameters
-num_of_epochs = 250_000 # Training will run for this many epochs by default
-min_num_of_epochs = 500 # Training will run for this many epochs irregardless of recent loss values or parameter changes
-learning_rate = 0.001
 
-# Define loss function and optimizer
-loss_fn = nn.MSELoss()
-optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
+def main():
+    model = ClampedLinearRegressionModel()
 
-# Define early stopping conditions
-input_side_cap_history = [] # history of x'
-line_slope_history = [] # history of w
-output_cap_history = [] # history of C
+    # Load the dataset
+    data = pd.read_csv("clamped_linear_data.csv", names = ["x", "y"]) # x is the input feature, y is the true output target
 
-# Decide whether the training has been running long enough to viably trigger early stopping
-are_min_epochs_done = lambda epoch : epoch > min_num_of_epochs
+    # Create pytorch tensors
+    x = torch.tensor(data["x"].values, dtype = torch.float32).view(-1, 1)
+    y = torch.tensor(data["y"].values, dtype = torch.float32).view(-1, 1)
 
-# Decide whether the training has stopped with a model that produces close to zero loss
-is_training_stagnant = lambda : (
-    abs(input_side_cap_history[-1] - input_side_cap_history[-2]) < 0.00005 and 
-    abs(line_slope_history[-1] - line_slope_history[-2]) < 0.00005 and 
-    abs(output_cap_history[-1] - output_cap_history[-2]) < 0.00005
-)
+    # Training hyperparameters
+    num_of_epochs = 250_000 # Training will run for this many epochs by default
+    min_num_of_epochs = 500 # Training will run for this many epochs irregardless of recent loss values or parameter changes
+    learning_rate = 0.001
 
-# Train the model
-print("Starting to train the model...")
-for epoch in range(num_of_epochs):
-    prediction = model(x)
+    # Define loss function and optimizer
+    loss_fn = nn.MSELoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
 
-    loss = loss_fn(prediction, y)
+    # Define early stopping conditions
+    input_side_cap_history = [] # history of x'
+    line_slope_history = [] # history of w
+    output_cap_history = [] # history of C
 
-    optimizer.zero_grad()
-    loss.backward()
-    optimizer.step()
+    # Decide whether the training has been running long enough to viably trigger early stopping
+    are_min_epochs_done = lambda epoch : epoch > min_num_of_epochs
 
-    input_side_cap_history.append(model.input_layer.bias.item())
-    line_slope_history.append(model.output_layer.weight.item())
-    output_cap_history.append(model.output_layer.bias.item())
+    # Decide whether the training has stopped with a model that produces close to zero loss
+    is_training_stagnant = lambda : (
+        abs(input_side_cap_history[-1] - input_side_cap_history[-2]) < 0.00005 and 
+        abs(line_slope_history[-1] - line_slope_history[-2]) < 0.00005 and 
+        abs(output_cap_history[-1] - output_cap_history[-2]) < 0.00005
+    )
 
-    # DEBUG LOGGING
-    print(f"model.input_layer.bias: {model.input_layer.bias.item()}")
-    print(f"model.output_layer.weight: {model.output_layer.weight.item()}")
-    print(f"model.output_layer.bias: {model.output_layer.bias.item()}")
+    # Train the model
+    print("Starting to train the model...")
+    for epoch in range(num_of_epochs):
+        prediction = model(x)
 
-    if are_min_epochs_done(epoch) and is_training_stagnant():
-        print("Early stopping condition triggered during training!")
-        break
+        loss = loss_fn(prediction, y)
 
-# Inspect the model
-print("\nSample predictions:")
-with torch.no_grad():
-    for value in [x for x in range(0, 101, 5)]: # integers between 0 and 100 with steps of 5
-        prediction = model(torch.tensor([[float(value)]]))
-        print(f"{value} -> {prediction.item():.4f}")
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
 
-# Persist the model
-print("Persisting the constructed model...")
-os.makedirs("models", exist_ok = True)
-torch.save(model.state_dict(), "models/clamped_linear_regression_model.pth")
+        input_side_cap_history.append(model.input_layer.bias.item())
+        line_slope_history.append(model.output_layer.weight.item())
+        output_cap_history.append(model.output_layer.bias.item())
+
+        # DEBUG LOGGING
+        print(f"model.input_layer.bias: {model.input_layer.bias.item()}")
+        print(f"model.output_layer.weight: {model.output_layer.weight.item()}")
+        print(f"model.output_layer.bias: {model.output_layer.bias.item()}")
+
+        if are_min_epochs_done(epoch) and is_training_stagnant():
+            print("Early stopping condition triggered during training!")
+            break
+
+    # Inspect the model
+    print("\nSample predictions:")
+    with torch.no_grad():
+        for value in [x for x in range(0, 101, 5)]: # integers between 0 and 100 with steps of 5
+            prediction = model(torch.tensor([[float(value)]]))
+            print(f"{value} -> {prediction.item():.4f}")
+
+    # Persist the model
+    print("Persisting the constructed model...")
+    os.makedirs("models", exist_ok = True)
+    torch.save(model.state_dict(), "models/clamped_linear_regression_model.pth")
+
+if __name__ == "__main__":
+    main()
