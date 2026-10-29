@@ -69,3 +69,8 @@ with torch.no_grad():
     for value in [x for x in range(0, 101, 5)]: # integers between 0 and 100 with steps of 5
         prediction = model(torch.tensor([[float(value)]]))
         print(f"{value} -> {prediction.item():.4f}")
+
+# Persist the model
+print("Persisting the constructed model...")
+os.makedirs("models", exist_ok = True)
+torch.save(model.state_dict(), "models/clamped_linear_regression_model.pth")
