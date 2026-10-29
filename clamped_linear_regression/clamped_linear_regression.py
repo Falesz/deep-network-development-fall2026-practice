@@ -45,7 +45,7 @@ class ClampedLinearRegressionModel(nn.Module):
 model = ClampedLinearRegressionModel()
     
 # Training hyperparameters
-num_of_epochs = 50_000 # Training will run for this many epochs by default
+num_of_epochs = 200_000 # Training will run for this many epochs by default
 learning_rate = 0.001
 
 # Define loss function and optimizer
