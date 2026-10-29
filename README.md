@@ -57,3 +57,7 @@ The GUI is implemented with `tkinter`. The plot is made with `matplotlib` and it
 `clamped_linear_data_generator.py` is a simple script that generates 10000 data points roughly around the `y = 3x + 10` line up until `y` values of 200 and a constant horizontal line of `y = 200` beyond. The aim here is to create a dataset that provides a simple problem where part of the solution can be obtained with a simple linear regression, but some additional logic is required for the full solution. Algebraic gymnastics may be involved.
 You may run this script with the command after navigating to the `clamped_linear_regression` folder:  
 `py clamped_linear_data_generator.py`
+
+### Clamped linear regression
+
+`clamped_linear_regression.py` is a script that constructs and trains a model that approximates the `y = min(wx + b, C)` function where `x` is the input feature, `w` and `b` are the weight and bias parameters of a standard linear regression solution and `C` is an upper boundary or clamp beyond which the linear regression is no longer valid and the function represents a horizontal line instead.
