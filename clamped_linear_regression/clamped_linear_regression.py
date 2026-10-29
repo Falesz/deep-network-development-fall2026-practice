@@ -20,7 +20,7 @@ class ClampedLinearRegressionModel(nn.Module):
         # can be fitted below C. This also means that there is a value x' which is the boundary point on the input side
         # beyond which outputs would become the constant C
 
-        # In terms of Linear neurons and ReLU activations the above function can be expressed as y = C - w×ReLU(-x + x')
+        # In terms of Linear neurons and Softplus activations the above function can be expressed as y = C - w×Softplus(-x + x')
 
         # The idea for the input layer is that it should learn z = -1x + x'
         # The sign of z tells us whether the input is below (positive sign) or above (negative sign) the boundary x'
@@ -30,7 +30,7 @@ class ClampedLinearRegressionModel(nn.Module):
             self.input_layer.weight.fill_(-1.0) # We know from the plan that the weight here should be a constant -1
         self.input_layer.weight.requires_grad = False
 
-        # The idea for the output layer is that it should learn y = -w×ReLU(z) + C
+        # The idea for the output layer is that it should learn y = -w×Softplus(z) + C
         # Since the "scale" of z is still in input units, it doesn't yet account for the slope of the true line
         # w is the transformation that converts our values from input units to output units
         # w will ideally be negative, as we only have the input distance from the boundary x' and build up an output value
@@ -39,13 +39,13 @@ class ClampedLinearRegressionModel(nn.Module):
     
     def forward(self, x):
         z = self.input_layer(x)
-        y = self.output_layer(torch.relu(z))
+        y = self.output_layer(nn.functional.softplus(z))
         return y
     
 model = ClampedLinearRegressionModel()
     
 # Training hyperparameters
-num_of_epochs = 200_000 # Training will run for this many epochs by default
+num_of_epochs = 250_000 # Training will run for this many epochs by default
 min_num_of_epochs = 500 # Training will run for this many epochs irregardless of recent loss values or parameter changes
 learning_rate = 0.001
 
@@ -82,6 +82,12 @@ for epoch in range(num_of_epochs):
     input_side_cap_history.append(model.input_layer.bias.item())
     line_slope_history.append(model.output_layer.weight.item())
     output_cap_history.append(model.output_layer.bias.item())
+
+    # DEBUG LOGGING
+    print(f"model.input_layer.bias: {model.input_layer.bias.item()}")
+    print(f"model.output_layer.weight: {model.output_layer.weight.item()}")
+    print(f"model.output_layer.bias: {model.output_layer.bias.item()}")
+
     if are_min_epochs_done(epoch) and is_training_stagnant():
         print("Early stopping condition triggered during training!")
         break
