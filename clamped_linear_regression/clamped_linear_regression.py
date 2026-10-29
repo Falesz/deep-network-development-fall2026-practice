@@ -46,11 +46,27 @@ model = ClampedLinearRegressionModel()
     
 # Training hyperparameters
 num_of_epochs = 200_000 # Training will run for this many epochs by default
+min_num_of_epochs = 500 # Training will run for this many epochs irregardless of recent loss values or parameter changes
 learning_rate = 0.001
 
 # Define loss function and optimizer
 loss_fn = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
+
+# Define early stopping conditions
+input_side_cap_history = [] # history of x'
+line_slope_history = [] # history of w
+output_cap_history = [] # history of C
+
+# Decide whether the training has been running long enough to viably trigger early stopping
+are_min_epochs_done = lambda epoch : epoch > min_num_of_epochs
+
+# Decide whether the training has stopped with a model that produces close to zero loss
+is_training_stagnant = lambda : (
+    abs(input_side_cap_history[-1] - input_side_cap_history[-2]) < 0.00005 and 
+    abs(line_slope_history[-1] - line_slope_history[-2]) < 0.00005 and 
+    abs(output_cap_history[-1] - output_cap_history[-2]) < 0.00005
+)
 
 # Train the model
 print("Starting to train the model...")
@@ -62,6 +78,13 @@ for epoch in range(num_of_epochs):
     optimizer.zero_grad()
     loss.backward()
     optimizer.step()
+
+    input_side_cap_history.append(model.input_layer.bias.item())
+    line_slope_history.append(model.output_layer.weight.item())
+    output_cap_history.append(model.output_layer.bias.item())
+    if are_min_epochs_done(epoch) and is_training_stagnant():
+        print("Early stopping condition triggered during training!")
+        break
 
 # Inspect the model
 print("\nSample predictions:")
