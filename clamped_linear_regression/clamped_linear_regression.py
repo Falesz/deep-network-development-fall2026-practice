@@ -16,7 +16,9 @@ class ClampedLinearRegressionModel(nn.Module):
         super().__init__()
 
         # The idea for the input layer is that it takes the x input feature from the dataset
-        # and fits it's output z to the z = 3x + 10 line, giving us good output candidates for x values between 0 and 63.3333... 
+        # and fits it's output z to the z = 3x + 10 line, giving us good output candidates for x values between 0 and 63.3333...
+        # TODO: THIS IDEA IS FUNDAMENTALLY FLAWED: THE INPUT LAYER HAS NO CHANCE TO LEARN 3x + 10 BECAISE THE TRAINING DATA DOESNT
+        # SUGGEST THAT AT ALL 
         self.input_layer = nn.Linear(1, 1) # outputs values called z
 
         # The idea for the shift layer is that it should learn u = 1z - 200. The sign of u tells us whether the right output
